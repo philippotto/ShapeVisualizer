@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+        #container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+        #left-column {
+            width: 10%;
+            padding: 10px;
+            background-color: #f2f2f2;
+        }
+        #right-column {
+            width: 90%;
+        }
+        #canvas {
+            border: 1px solid black;
+            width: 100%;
+            height: 100%;
+        }
+        #inputRectangles {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="left-column">
+            <textarea id="inputRectangles" placeholder="Enter rectangles (x1, y1, x2, y2)"></textarea>
+        </div>
+        <div id="right-column">
+            <canvas id="canvas" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const inputRectangles = document.getElementById("inputRectangles");
+        const canvas = document.getElementById("canvas");
+        const context = canvas.getContext("2d");
+
+        // Update canvas size to match window size
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * 0.9; // 90% of window width
+            canvas.height = window.innerHeight;
+            drawRectangles();
+        }
+
+        // Initial canvas size setup
+        resizeCanvas();
+
+        // Update canvas size when the window is resized
+        window.addEventListener("resize", resizeCanvas);
+
+        inputRectangles.addEventListener("input", drawRectangles);
+
+        function drawRectangles() {
+            const inputText = inputRectangles.value;
+            const lines = inputText.split('\n');
+
+            // Clear the canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const coordinates = line.split(",");
+
+                if (coordinates.length === 4) {
+                    const x1 = parseInt(coordinates[0]);
+                    const y1 = parseInt(coordinates[1]);
+                    const x2 = parseInt(coordinates[2]);
+                    const y2 = parseInt(coordinates[3]);
+
+                    // Generate a distinct color for each rectangle
+                    context.fillStyle = `hsl(${i * 36}, 70%, 60%)`;
+
+                    // Draw the rectangle
+                    context.fillRect(x1, y1, x2 - x1, y2 - y1);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
